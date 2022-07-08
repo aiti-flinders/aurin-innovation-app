@@ -1,0 +1,13 @@
+name: aurin-innovation-app
+title: aurin-innovation-app
+username:
+account: aiti
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6323097
+bundleId: 6080302
+url: https://aiti.shinyapps.io/aurin-innovation-app/
+when: 1657244836.62596
+lastSyncTime: 1657244836.62596
+asMultiple: FALSE
+asStatic: FALSE

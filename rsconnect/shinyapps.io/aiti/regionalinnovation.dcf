@@ -1,0 +1,14 @@
+name: regionalinnovation
+title: regionalinnovation
+username:
+account: aiti
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6322790
+bundleId: 5917183
+url: https://aiti.shinyapps.io/regionalinnovation/
+when: 1652840710.89035
+lastSyncTime: 1652840710.89035
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: figure/ec-products-1.png|industrial_growth_opportunities.md
