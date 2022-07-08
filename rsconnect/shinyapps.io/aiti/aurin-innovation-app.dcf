@@ -5,9 +5,9 @@ account: aiti
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6323097
-bundleId: 6080302
+bundleId: 6080891
 url: https://aiti.shinyapps.io/aurin-innovation-app/
-when: 1657244836.62596
-lastSyncTime: 1657244836.62596
+when: 1657264083.92582
+lastSyncTime: 1657264083.92582
 asMultiple: FALSE
 asStatic: FALSE
