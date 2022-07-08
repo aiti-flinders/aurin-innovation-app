@@ -11,7 +11,7 @@ innovationCompareUI <- function(id, data) {
                     conditionalPanel("input.state", ns = ns,
                                      selectInput(ns("sa4"),
                                                  label = "Statistical Area (Level 4): ",
-                                                 choices = c("All SA4 regions"="", unique(data$sa4_name)),
+                                                 choices = c("All SA4"="", unique(data$sa4_name)),
                                                  multiple = TRUE)
                     )
              ),
@@ -19,7 +19,7 @@ innovationCompareUI <- function(id, data) {
                     conditionalPanel("input.state", ns = ns,
                                      selectInput(ns("sa2"),
                                                  label = "Statistical Area (Level 2): ",
-                                                 choices = c("All SA2 regions"="",unique(data$sa2_name)),
+                                                 choices = c("All SA2"="",unique(data$sa2_name)),
                                                  multiple = TRUE)
                     )
              ),
@@ -27,19 +27,7 @@ innovationCompareUI <- function(id, data) {
                     radioButtons(ns("year"), label = "Year: ", choices = c(2011, 2016))
              )
            ),
-           # fluidRow(
-           #   p("Things to control the graphs"),
-           #   column(3,
-           #          selectInput(ns("var"), label = "Histogram: ", choices = colnames(select(data, where(is.numeric))))
-           #   )
-           # ),
-           # hr(),
-           # fluidRow(
-           #   column(6,
-           #          plotOutput(ns("hist"))),
-           #   column(6,
-           #          plotOutput(ns("plot")))
-           # ),
+
            DTOutput(ns("table"))
   )
 

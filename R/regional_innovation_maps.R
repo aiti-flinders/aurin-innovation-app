@@ -1,4 +1,3 @@
-library(shinyWidgets)
 
 innovationMapUI <- function(id, data) {
 
@@ -38,7 +37,8 @@ innovationMapUI <- function(id, data) {
                                            choiceValues = c("innovation",
                                                             "human_knowledge",
                                                             "patent_output")
-                         )))
+                         ),
+                         downloadButton(ns("download_plot"), label = "Download Map")))
 }
 
 innovationMapServer <- function(id, data) {
@@ -53,12 +53,19 @@ innovationMapServer <- function(id, data) {
           as.character()
       })
 
+      map_reactive <- reactive({
+        leaflet(data = map_data()) %>%
+          addTiles() %>%
+          fitBounds(bounds()[1], bounds()[2], bounds()[3], bounds()[4]) %>%
+          map_draw()
+      })
+
+
       output$map <- renderLeaflet({
         leaflet() %>%
           addTiles() %>%
           fitBounds(bounds()[1], bounds()[2], bounds()[3], bounds()[4])
       })
-
 
 
       map_data <- reactive({
@@ -71,8 +78,7 @@ innovationMapServer <- function(id, data) {
           st_transform("+proj=longlat +datum=WGS84")
       })
 
-
-      observe({
+      map_draw <- function(map) {
         colour_by <- input$colour
         colour_data <- map_data()[[colour_by]]
         colour_pal <- case_when(
@@ -84,27 +90,34 @@ innovationMapServer <- function(id, data) {
 
         pal <- colorBin(colour_pal, colour_data, bins = 7, pretty = TRUE, na.color = 'black')
 
+        map %>%
+        clearShapes() %>%
+        addPolygons(fillColor = ~pal(colour_data),
+                    weight = 0.5,
+                    opacity = 0.6,
+                    color = "black",
+                    fillOpacity = 0.5,
+                    highlightOptions = highlightOptions(
+                      weight = 2,
+                      fillOpacity = 0.75,
+                      bringToFront = TRUE
+                    ),
+                    label = ~sa2_name,
+                    layerId = ~sa2_name
+        ) %>%
+        addLegend("bottomleft",
+                  pal = pal,
+                  values = colour_data,
+                  title = legend_title,
+                  layerId = "color")
+      }
+
+
+      observe({
         leafletProxy("map",
                      data = map_data()) %>%
-          clearShapes() %>%
-          addPolygons(fillColor = ~pal(colour_data),
-                      weight = 0.5,
-                      opacity = 0.6,
-                      color = "black",
-                      fillOpacity = 0.5,
-                      highlightOptions = highlightOptions(
-                        weight = 2,
-                        fillOpacity = 0.75,
-                        bringToFront = TRUE
-                      ),
-                      label = ~sa2_name,
-                      layerId = ~sa2_name
-          ) %>%
-          addLegend("bottomleft",
-                    pal = pal,
-                    values = colour_data,
-                    title = legend_title,
-                    layerId = "color")
+          map_draw()
+
       })
 
       popup <- function(sa2, lng, lat) {
@@ -140,6 +153,22 @@ innovationMapServer <- function(id, data) {
           popup(event$id, event$lng, event$lat)
         })
       })
+
+      user_map <- reactive({
+        map_reactive() %>%
+          map_draw() %>%
+          setView(lng =  input$map_center$lng,
+                  lat = input$map_center$lat,
+                  zoom = input$map_zoom)
+
+      })
+
+      output$download_plot <- downloadHandler(
+        filename = "map.png",
+        content = function(file) {
+          mapview::mapshot(user_map(), file = file, cliprect = "viewport")
+        }
+      )
 
     }
   )
