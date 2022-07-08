@@ -5,7 +5,10 @@ innovationCompareUI <- function(id, data) {
   tabPanel("Compare Regions",
            fluidRow(
              column(3,
-                    selectInput(ns("state"), label = "State: ", choices = c("All states"="", unique(data$state_name)), multiple = TRUE),
+                    selectInput(ns("state"),
+                                label = "State: ",
+                                choices = c("All states"="", unique(data$state_name)),
+                                multiple = TRUE),
              ),
              column(3,
                     conditionalPanel("input.state", ns = ns,
@@ -26,6 +29,9 @@ innovationCompareUI <- function(id, data) {
              column(3,
                     radioButtons(ns("year"), label = "Year: ", choices = c(2011, 2016))
              )
+           ),
+           fluidRow(
+             downloadButton(ns("download_data"))
            ),
 
            DTOutput(ns("table"))
@@ -68,28 +74,10 @@ innovationCompareServer <- function(id, data) {
                              selected = still_selected, server = TRUE)
       })
 
-      # output$hist <- renderPlot({
-      #   ggplot(data = data[data$year == input$year, ], aes_string(x = input$var)) +
-      #     geom_histogram(bins = 25)
-      # })
-      #
-      # output$plot <- renderPlot({
-      #   df <- data[data$sa2_name %in% input$sa2,] %>%
-      #     select(sa2_name, year, innovation, patent_output, human_knowledge) %>%
-      #     tidyr::pivot_longer(names_to = "indicator",
-      #                         values_to = "value",
-      #                         cols = -c(sa2_name, year))
-      #
-      #     ggplot(df) +
-      #       geom_line(aes(x = year,
-      #                     y = value,
-      #                     col = indicator)) +
-      #       facet_grid(~sa2_name)
-      #
-      # })
 
       create_data <- reactive({
         data %>%
+          select(year, sa2_name, sa4_name, state_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge, patent_output, innovation) %>%
           filter(is.null(input$state) | state_name %in% input$state,
                  is.null(input$sa4) | sa4_name %in% input$sa4,
                  is.null(input$sa2) | sa2_name %in% input$sa2,
@@ -99,6 +87,7 @@ innovationCompareServer <- function(id, data) {
       output$table <- renderDT({
         df <- create_data() %>%
           select(sa2_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge, patent_output, innovation)
+
         datatable(df,
                   options = list(
                     order = list(list(1, "desc"))
@@ -117,6 +106,15 @@ innovationCompareServer <- function(id, data) {
           formatRound(c("Human Knowledge Score", "Patent Output Score", "Innovation Score"), digits = 1) %>%
           formatPercentage(c("KIBS Employment"), digits = 1)
       })
+
+      output$download_data <- downloadHandler(
+        filename = function() {
+          paste("innovation_data.csv")
+        },
+        content = function(file) {
+          write.csv(create_data() %>% as_tibble() , file, row.names = FALSE)
+        }
+      )
 
 
     }
