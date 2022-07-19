@@ -2,6 +2,7 @@
 
 export(innovation_app)
 import(DT)
+import(aititheme)
 import(bs4Dash)
 import(dplyr)
 import(fresh)

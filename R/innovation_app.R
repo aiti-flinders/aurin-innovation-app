@@ -10,6 +10,7 @@
 #' @import dplyr
 #' @import DT
 #' @import stringr
+#' @import aititheme
 #' @import pkgload
 #'
 #' @export innovation_app
