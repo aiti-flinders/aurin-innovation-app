@@ -1,8 +1,9 @@
-#' @import shiny
-#' @import shinyWidgets
+#' @rawNamespace import(shiny, except = c(column, tabsetPanel, insertTab, actionButton))
+#' @rawNamespace import(shinyWidgets, except = c(progressBar))
+#' @import bs4Dash
+#' @import fresh
 #' @import strayr
 #' @import leaflet
-#' @import webshot
 #' @import mapview
 #' @import sf
 #' @import ggplot2
