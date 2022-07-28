@@ -37,7 +37,7 @@ innovationMapUI <- function(id, data) {
                              inputId = ns("colour"),
                              label = "Select Indicator: ",
                              choiceNames = c("Innovation", "Human Knowledge", "Patent Output"),
-                             choiceValues = c("innovation", "human_knowledge", "patent_output")
+                             choiceValues = c("innovation_score", "human_knowledge_score", "patent_output_score")
                            )
              ),
              dashboard_box(collapsible = TRUE,
@@ -82,21 +82,27 @@ innovationMapServer <- function(id, data) {
             year == input$year,
             is.null(input$states) | state_name %in% input$states
           ) %>%
+          pivot_longer(cols = ends_with("_score"),
+                       names_to = "indicator",
+                       values_to = "value") %>%
+          mutate(value_label = scales::label_number(accuracy = 0.1)(value)) %>%
           st_as_sf() %>%
           st_transform("+proj=longlat +datum=WGS84")
       })
 
       map_draw <- function(map) {
         colour_by <- input$colour
-        colour_data <- map_data()[[colour_by]]
+        colour_data <- map_data() %>%
+          filter(indicator == input$colour) %>%
+          pull(value)
         colour_pal <- case_when(
-          input$colour == "innovation" ~ "Blues",
-          input$colour == "human_knowledge" ~ "Purples",
-          input$colour == "patent_output" ~ "Greens"
+          input$colour == "innovation_score" ~ "Blues",
+          input$colour == "human_knowledge_score" ~ "Purples",
+          input$colour == "patent_output_score" ~ "Greens"
         )
-        legend_title <- paste(str_to_title(gsub("_", " ", colour_by)), "Score")
+        legend_title <- paste(str_to_title(gsub("_", " ", colour_by)))
 
-        pal <- colorBin(colour_pal, colour_data, bins = 7, pretty = TRUE, na.color = 'black')
+        pal <- colorBin(colour_pal, colour_data, bins = 5, pretty = TRUE, na.color = 'black')
 
         map %>%
           clearShapes() %>%
@@ -110,7 +116,7 @@ innovationMapServer <- function(id, data) {
                         fillOpacity = 0.75,
                         bringToFront = TRUE
                       ),
-                      label = ~sa2_name,
+                      label = ~paste(sa2_name, ": ", value_label),
                       layerId = ~sa2_name
           ) %>%
           addLegend("bottomleft",
@@ -123,25 +129,31 @@ innovationMapServer <- function(id, data) {
 
       observe({
         leafletProxy("map",
-                     data = map_data()) %>%
+                     data = map_data() %>%
+                       filter(indicator == input$colour)) %>%
           map_draw()
 
       })
 
       popup <- function(sa2, lng, lat) {
-        selected <- map_data()[map_data()$sa2_name == sa2, ]
+        selected <- map_data() %>%
+          filter(sa2_name == sa2) %>%
+          pivot_wider(id_cols = -value_label,
+                      names_from = indicator,
+                      values_from = value)
+
         content <- as.character(tagList(
-          tags$h4("Innovation Score: ", as.integer(selected$innovation)),
+          tags$h4(sprintf("Innovation Score: %.1f", selected$innovation_score)),
           tags$strong(HTML(sprintf("%s, %s, %s",
                                    selected$sa2_name, selected$state_name, selected$sa4_name
           ))), tags$p(),
-          tags$h5(HTML(sprintf("Patent Output Score: %s", as.integer(selected$patent_output)))),
-          sprintf("Patents per 1000 employees: %s", as.integer(selected$patents)), tags$br(),
-          sprintf("Backwards citations: %s", as.integer(selected$backwards_citations)), tags$br(),
-          tags$h5(HTML(sprintf("Human Knowledge Score: %s", as.integer(selected$human_knowledge)))),
-          sprintf("Average skill level of occupations: %s", round(selected$skill, 1)), tags$br(),
+          tags$h5(HTML(sprintf("Patent Output Score: %.1f", selected$patent_output_score))),
+          sprintf("Patents per 1000 employees: %.0f", selected$patents), tags$br(),
+          sprintf("Backwards citations: %.0f", selected$backwards_citations), tags$br(),
+          tags$h5(HTML(sprintf("Human Knowledge Score: %.1f", selected$human_knowledge_score))),
+          sprintf("Average skill level of occupations: %.0f", selected$skill), tags$br(),
           sprintf("Proportion KIBS employment: %s", scales::percent(selected$kibs)), tags$br(),
-          sprintf("Education level: %s", round(selected$qualification, 2))
+          sprintf("Education level: %.0f", as.numeric(selected$qualification))
 
         ))
 
@@ -165,7 +177,7 @@ innovationMapServer <- function(id, data) {
       user_map <- reactive({
         map_reactive() %>%
           map_draw() %>%
-          setView(lng =  input$map_center$lng,
+          setView(lng = input$map_center$lng,
                   lat = input$map_center$lat,
                   zoom = input$map_zoom)
 
