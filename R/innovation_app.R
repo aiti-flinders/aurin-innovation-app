@@ -8,6 +8,7 @@
 #' @import sf
 #' @import ggplot2
 #' @import dplyr
+#' @import tidyr
 #' @import DT
 #' @import stringr
 #' @import aititheme

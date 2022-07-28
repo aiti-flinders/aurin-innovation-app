@@ -32,4 +32,5 @@ Imports:
     strayr,
     stringr,
     tibble,
+    tidyr,
     webshot
