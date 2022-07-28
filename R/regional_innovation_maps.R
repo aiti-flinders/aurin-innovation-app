@@ -98,7 +98,7 @@ innovationMapServer <- function(id, data) {
         colour_pal <- case_when(
           input$colour == "innovation_score" ~ "Blues",
           input$colour == "human_knowledge_score" ~ "Purples",
-          input$colour == "patent_output_score" ~ "Greens"
+          input$colour == "patent_output_score" ~ "Oranges"
         )
         legend_title <- paste(str_to_title(gsub("_", " ", colour_by)))
 
