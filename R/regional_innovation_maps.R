@@ -14,7 +14,10 @@ innovationMapUI <- function(id, data) {
                              regional skill level, and regional qualification level"),
                            p(tags$b("Patent Output: "),
                              "Factor derived from the number of patents per 1000 workers, and
-                             the number of backward citations each patent recieved.")
+                             the number of backward citations each patent recieved."),
+                           p(tags$b("Data notes: "),
+                             "Factors are unable to be calculated for regions with fewer than
+                             150 workers as per the ABS Census TableBuilder data.")
              ),
              dashboard_box(collapsible = TRUE,
                            title = "Customise Map",
@@ -55,6 +58,11 @@ innovationMapServer <- function(id, data) {
     id,
     function(input, output, session) {
 
+      data <- data %>%
+        st_as_sf() %>%
+        st_transform("+proj=longlat +datum=WGS84")
+
+
       bounds <- reactive({
         map_data() %>%
           st_bbox() %>%
@@ -82,12 +90,10 @@ innovationMapServer <- function(id, data) {
             year == input$year,
             is.null(input$states) | state_name %in% input$states
           ) %>%
-          pivot_longer(cols = ends_with("_score"),
+          pivot_longer(cols = c("innovation_score", "human_knowledge_score", "patent_output_score"),
                        names_to = "indicator",
                        values_to = "value") %>%
-          mutate(value_label = scales::label_number(accuracy = 0.1)(value)) %>%
-          st_as_sf() %>%
-          st_transform("+proj=longlat +datum=WGS84")
+          mutate(value_label = scales::label_number(accuracy = 0.1)(value))
       })
 
       map_draw <- function(map) {
@@ -102,15 +108,15 @@ innovationMapServer <- function(id, data) {
         )
         legend_title <- paste(str_to_title(gsub("_", " ", colour_by)))
 
-        pal <- colorBin(colour_pal, colour_data, bins = 5, pretty = TRUE, na.color = 'black')
+        pal <- colorBin(colour_pal, colour_data, bins = 5, pretty = TRUE, na.color = 'grey')
 
         map %>%
           clearShapes() %>%
           addPolygons(fillColor = ~pal(colour_data),
-                      weight = 0.5,
+                      weight = 0.3,
                       opacity = 0.6,
                       color = "black",
-                      fillOpacity = 0.5,
+                      fillOpacity = 0.8,
                       highlightOptions = highlightOptions(
                         weight = 2,
                         fillOpacity = 0.75,
@@ -136,11 +142,9 @@ innovationMapServer <- function(id, data) {
       })
 
       popup <- function(sa2, lng, lat) {
-        selected <- map_data() %>%
-          filter(sa2_name == sa2) %>%
-          pivot_wider(id_cols = -value_label,
-                      names_from = indicator,
-                      values_from = value)
+        selected <- innovation_data %>%
+          filter(sa2_name == sa2,
+                 year == input$year)
 
         content <- as.character(tagList(
           tags$h4(sprintf("Innovation Score: %.1f", selected$innovation_score)),
