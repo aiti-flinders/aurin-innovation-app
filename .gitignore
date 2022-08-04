@@ -38,3 +38,6 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .Rproj.user
+
+# rsconnect files
+rsconnect/shinyapps.io/aiti/*.dcf
