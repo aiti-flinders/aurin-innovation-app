@@ -2,7 +2,7 @@ innovationCompareUI <- function(id, data) {
 
   ns <- NS(id)
 
-  tabPanel("Compare Regions",
+  tabPanel("Compare Regions", icon = icon("search"),
            fluidRow(
              column(3,
                     selectInput(ns("state"),
@@ -30,9 +30,7 @@ innovationCompareUI <- function(id, data) {
                     radioButtons(ns("year"), label = "Year: ", choices = c(2011, 2016))
              )
            ),
-           fluidRow(
-             downloadButton(ns("download_data"))
-           ),
+             downloadButton(ns("download_data"), label = "Download Table Data", class = "download-button"),
 
            DTOutput(ns("table"))
   )
@@ -77,7 +75,7 @@ innovationCompareServer <- function(id, data) {
 
       create_data <- reactive({
         data %>%
-          select(year, sa2_name, sa4_name, state_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge, patent_output, innovation) %>%
+          select(year, sa2_name, sa4_name, state_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge_score, patent_output_score, innovation_score) %>%
           filter(is.null(input$state) | state_name %in% input$state,
                  is.null(input$sa4) | sa4_name %in% input$sa4,
                  is.null(input$sa2) | sa2_name %in% input$sa2,
@@ -86,7 +84,7 @@ innovationCompareServer <- function(id, data) {
 
       output$table <- renderDT({
         df <- create_data() %>%
-          select(sa2_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge, patent_output, innovation)
+          select(sa2_name, patents, backwards_citations, kibs, skill, qualification, human_knowledge_score, patent_output_score, innovation_score)
 
         datatable(df,
                   options = list(
@@ -98,9 +96,9 @@ innovationCompareServer <- function(id, data) {
                                "KIBS Employment" = 'kibs',
                                "Occupation Skill Level" = 'skill',
                                "Education Level" = 'qualification',
-                               "Human Knowledge Score" = 'human_knowledge',
-                               "Patent Output Score" = 'patent_output',
-                               "Innovation Score" = 'innovation'),
+                               "Human Knowledge Score" = 'human_knowledge_score',
+                               "Patent Output Score" = 'patent_output_score',
+                               "Innovation Score" = 'innovation_score'),
                   rownames = FALSE) %>%
           formatRound(c("Occupation Skill Level", "Education Level"), digits = 1) %>%
           formatRound(c("Human Knowledge Score", "Patent Output Score", "Innovation Score"), digits = 1) %>%

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Regional Innovation</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Regional Innovation</h1>
+
+
+
+<p>The regional innovation dataset contains a measure of innovation, inputs to innovation, and other innovation metrics for SA2 regions, for 2011 and 2016. The measure of innovation is derived from a factor analysis model which identifies two factors.</p>
+<div id="human-knowledge" class="section level1">
+<h1>Human Knowledge</h1>
+<p>Human knowledge is a measure of the level of knowledge present in a given SA2. It is calculated from the factor analysis model, and is measured by three variables:</p>
+<ol style="list-style-type: decimal">
+<li>Skill</li>
+</ol>
+<p><em>Average <strong>skill level</strong> of region occupations</em></p>
+<p>The Australian Skills Commission provides data on the core competencies of occupations as deined by the 2006 ANZSCO at the unit level. Each occupation has a skill level between 1 (least skilled) and 10 (most skilled). The core competencies for an Economist are shown below in Table <a href="#tab:skillcalc">1</a>.</p>
+<table>
+<caption><span id="tab:skillcalc">Table 1: </span>Australian Skills Commission core competencies: Economists</caption>
+<thead>
+<tr class="header">
+<th align="left">ANZSCO Occupation</th>
+<th align="left">Core Competencies</th>
+<th align="right">Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Economists</td>
+<td align="left">Numeracy</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">Economists</td>
+<td align="left">Digital engagement</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">Economists</td>
+<td align="left">Teamwork</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Economists</td>
+<td align="left">Writing</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">Economists</td>
+<td align="left">Reading</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">Economists</td>
+<td align="left">Learning</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">Economists</td>
+<td align="left">Problem solving</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">Economists</td>
+<td align="left">Oral communication</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">Economists</td>
+<td align="left">Planning and organising</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">Economists</td>
+<td align="left">Initiative and innovation</td>
+<td align="right">8</td>
+</tr>
+</tbody>
+</table>
+<p>The skill level of a region is the average of the occupations score, weighted by the employment share of that occupation, in that region.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Qualification</li>
+</ol>
+<p><em>Average <strong>education level</strong> of those employed in the region</em></p>
+<p>Data is sourced from the ABS Census of Population and Housing - QALLP. The education levels are:</p>
+<ul>
+<li>Postgraduate Degree</li>
+<li>Graduate Diploma, Graduate Certificate and Bachelor Degree</li>
+<li>Advanced Diploma and Diploma</li>
+<li>Certificate</li>
+</ul>
+<p>A region is scored between 1 (least educated) and 4 (most educated) based on the proportion of workers within each qualification level.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Knowledge Intensive Business Services (KIBS)</li>
+</ol>
+<p><em>Proportion of workers in <strong>knowledge intensive business services</strong></em></p>
+<p>Knowledge intensive business services are defined at the ANZSIC class level from the <a href="https://www.mbie.govt.nz/assets/bd287dd4f2/Knowledge-intensive-services-report.pdf" class="uri">Knowledge Intensive Services Report</a> prepared by the New Zealand Government in 2014. 68 industries are classified as knowledge intensive.</p>
+</div>
+<div id="patent-output" class="section level1">
+<h1>Patent Output</h1>
+<p>The patent output factor is a measure of patent activity in a region, and is based on two variables:</p>
+<ol style="list-style-type: decimal">
+<li>Patent applications</li>
+</ol>
+<p><em>Number of <strong>patents</strong> per 1000 workers.</em></p>
+<p>Patent data is derived from the 2019 Intellectual Property Government Open Data (IPGOD) tables 101 and 102<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Backward citations</li>
+</ol>
+<p><em>Average number of <strong>backward citations</strong> per patent</em></p>
+<p>Patent citation data derived from the 2019 IPGOD table 110.</p>
+</div>
+<div id="other-innovation-indicators" class="section level1">
+<h1>Other Innovation Indicators</h1>
+<p>The regional innovation dataset contains other variables which may be of interest to innovation researchers. These were collected during the exploratory factor analysis, but were not included in the confirmatory factor analysis.</p>
+<div id="designs" class="section level2">
+<h2>Designs</h2>
+<p><em>Number of <strong>designs</strong> per 1000 workers.</em></p>
+<p>Designs data is derived from the 2019 IPGOD tables 301 and 302. All designs whose application originated from a valid SA2 in Australia are counted.</p>
+</div>
+<div id="trademarks" class="section level2">
+<h2>Trademarks</h2>
+<p><em>Number of <strong>trademarks</strong> per 1000 workers</em></p>
+<p>Trademarks data is derived from the 2019 IPGOD tables 201 and 202. All trademarks whose application originated from a valid SA2 in Australia are counted.</p>
+</div>
+<div id="plants" class="section level2">
+<h2>Plants</h2>
+<p><em>Number of <strong>plant breeder rights</strong> per 1000 workers</em></p>
+<p>Plant Breeder Rights data is derived from the 2019 IPGOD tables 401 and 402. Only plant breeder rights lodged from a valid SA2 in Australia are included.</p>
+</div>
+<div id="owner-managers" class="section level2">
+<h2>Owner Managers</h2>
+<p><em>Proportion of workers who are <strong>owner managers</strong> of incorporated and unincorporated enterprises</em></p>
+<p>Data is derived from the ABS Census of Population and Housing SIEMP for 2016 and EMTP for 2011.</p>
+</div>
+<div id="unis" class="section level2">
+<h2>Unis</h2>
+<p><em>Number of <strong>universities</strong></em>.</p>
+<p>University point data is sourced from <a href="https://data.aurin.org.au/dataset/aurin-aurin-national-education-dataset-tafes-2018-na">the Aurin Portal</a> and is converted to a count of universities within SA2 boundaries. This data is only available for 2018.</p>
+</div>
+<div id="tafes" class="section level2">
+<h2>Tafes</h2>
+<p><em>Number of <strong>TAFEs</strong></em>
+TAFE point data is sourced from <a href="https://data.aurin.org.au/dataset/aurin-aurin-national-education-dataset-tafes-2018-na">the Aurin Portal</a> and is converted to a count of TAFE campuses within SA2 boundaries. This data is only available for 2018.</p>
+</div>
+<div id="stem" class="section level2">
+<h2>STEM</h2>
+<p><em>Proportion of workers with a qualification in a <strong>stem field</strong></em></p>
+<p>STEM qualifications refere to any non-school qualifications in Natural and Physical Sciences, Information Technology, Engineering and Related Technologies, and Agriculture, Environmental and Related Studies.</p>
+</div>
+<div id="employment" class="section level2">
+<h2>Employment</h2>
+<p><em>Count of <strong>workers</strong> in a region</em>.</p>
+<p>Data is measured by the ABS 2011 and 2016 Census, Counting Place of Work.</p>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>This data has since been superseded by the 2020, 2021, and 2022 releases of IPGOD. However, the 2019 release was the last to include geocoding of patent (and other IP) data at the SA2 level, with more recent releases using postcode instead. Subsequent releases of IPGOD are intended to re-incorporate approximate geocoding.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
