@@ -1,56 +1,67 @@
 
-innovationMapUI <- function(id, data) {
+innovationMapUI <- function(id) {
 
   ns <- NS(id)
-  tabPanel(title = "Innovation Map",
-           leafletOutput(ns("map"), width = '100%', height = "600px"),
-           fluidRow(
-             dashboard_box(collapsible = TRUE,
-                           title = "Terms",
-                           p(tags$b("Innovation: "),
-                             "Second-order factor derived from Human Knowledge and Patent Output factors."),
-                           p(tags$b("Human Knowledge: "),
-                             "Factor derived from knowledge intensive business services,
-                             regional skill level, and regional qualification level"),
-                           p(tags$b("Patent Output: "),
-                             "Factor derived from the number of patents per 1000 workers, and
-                             the number of backward citations each patent recieved."),
-                           p(tags$b("Data notes: "),
-                             "Factors are unable to be calculated for regions with fewer than
-                             150 workers as per the ABS Census TableBuilder data.")
+  tabPanel(title = "Innovation Map", icon = icon("globe"), fluid = TRUE,
+           sidebarLayout(
+             sidebarPanel(
+               titlePanel("Customise Map"),
+               fluidRow(column(6,
+                               checkboxGroupInput(inputId = ns("states"),
+                                                  label = "Select State(s):",
+                                                  choices = clean_state(1:8, to = "state_name"))
+               ),
+               column(3,
+                      radioButtons(inputId = ns("year"),
+                                   label = "Select Year:",
+                                   choices = c(2011, 2016),
+                                   selected = 2016),
+                      radioButtons(inputId = ns("colour"),
+                                   label = "Select Indicator:",
+                                   choiceNames = c("Innovation", "Human Knowledge", "Patent Output"),
+                                   choiceValues = c("innovation_score", "human_knowledge_score", "patent_output_score"))
+               )),
+               hr(),
+               titlePanel("Download Options"),
+               fluidRow(column(6,
+                               textInput(inputId = ns("filename"),
+                                  label = "Filename",
+                                  placeholder = "Type a filename")
+                               ),
+                        column(6,
+                               radioButtons(inputId = ns("filetype"),
+                                     label = "File extension",
+                                     choices = c("png", "jpeg"))
+                               )),
+               downloadButton(outputId = ns("download_plot"), "Download chart", class = "download-button"),
+               hr(),
+               helpText(
+                 p(tags$b("Innovation: "),
+                   "Second-order factor derived from Human Knowledge and Patent Output factors."),
+                 p(tags$b("Human Knowledge: "),
+                   "Factor derived from knowledge intensive business services, regional skill level, and regional qualification level."),
+                 p(tags$b("Patent Output: "),
+                   "Factor derived from the number of patents per 1000 workers, and the number of backward citations each patent received."),
+                 p(tags$b("Data notes: "),
+                   "Factors are unable to be calculated for regions with fewer than 150 workers and will show as NA.")
+               )
              ),
-             dashboard_box(collapsible = TRUE,
-                           title = "Customise Map",
-                           selectInput(
-                             inputId = ns("states"),
-                             label = "Select States: ",
-                             choices = c("All states" = "",
-                                         clean_state(1:8, to = "state_name")),
-                             multiple = TRUE
-                           ),
-                           radioGroupButtons(
-                             justified = TRUE,
-                             inputId = ns("year"),
-                             label = "Select Year: ",
-                             choices = c(2011, 2016)
-                           ),
-                           radioGroupButtons(
-                             direction = "vertical",
-                             justified = TRUE,
-                             inputId = ns("colour"),
-                             label = "Select Indicator: ",
-                             choiceNames = c("Innovation", "Human Knowledge", "Patent Output"),
-                             choiceValues = c("innovation_score", "human_knowledge_score", "patent_output_score")
-                           )
+           mainPanel(
+             fluidRow(
+               leafletOutput(ns("map"), width = '100%', height = "600px")
              ),
-             dashboard_box(collapsible = TRUE,
-                           title = "Downloads",
-                           width = 4,
-                           download_graph_ui(id)
+             hr(),
+             fluidRow(
+               helpText("Tip: Click on an SA2 for more information.")
              )
            )
   )
+  )
+
+
 }
+
+
 
 innovationMapServer <- function(id, data) {
 
@@ -93,6 +104,7 @@ innovationMapServer <- function(id, data) {
           pivot_longer(cols = c("innovation_score", "human_knowledge_score", "patent_output_score"),
                        names_to = "indicator",
                        values_to = "value") %>%
+          filter(indicator == input$colour) %>%
           mutate(value_label = scales::label_number(accuracy = 0.1)(value))
       })
 
@@ -135,14 +147,13 @@ innovationMapServer <- function(id, data) {
 
       observe({
         leafletProxy("map",
-                     data = map_data() %>%
-                       filter(indicator == input$colour)) %>%
+                     data = map_data()) %>%
           map_draw()
 
       })
 
       popup <- function(sa2, lng, lat) {
-        selected <- innovation_data %>%
+        selected <- data %>%
           filter(sa2_name == sa2,
                  year == input$year)
 
@@ -155,9 +166,9 @@ innovationMapServer <- function(id, data) {
           sprintf("Patents per 1000 employees: %.0f", selected$patents), tags$br(),
           sprintf("Backwards citations: %.0f", selected$backwards_citations), tags$br(),
           tags$h5(HTML(sprintf("Human Knowledge Score: %.1f", selected$human_knowledge_score))),
-          sprintf("Average skill level of occupations: %.0f", selected$skill), tags$br(),
+          sprintf("Average skill level of occupations: %.1f", selected$skill), tags$br(),
           sprintf("Proportion KIBS employment: %s", scales::percent(selected$kibs)), tags$br(),
-          sprintf("Education level: %.0f", as.numeric(selected$qualification))
+          sprintf("Education level: %.1f", as.numeric(selected$qualification))
 
         ))
 
