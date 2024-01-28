@@ -1,4 +1,5 @@
 library(rmarkdown)
+library(bookdown)
 
 render(input = system.file("doc/regional_innovation.Rmd", package = "aurininnovation"),
        output_format = bookdown::html_vignette2(),
